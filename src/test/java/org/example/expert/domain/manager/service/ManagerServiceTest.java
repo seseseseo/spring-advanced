@@ -46,22 +46,25 @@ class ManagerServiceTest {
 
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
-        assertEquals("Manager not found", exception.getMessage());
+        assertEquals("Todo not found", exception.getMessage());
     }
 
     @Test
     void todo의_user가_null인_경우_예외가_발생한다() {
         // given
         AuthUser authUser = new AuthUser(1L, "a@a.com", UserRole.USER);
+        // 가짜 로그인 사용자 정보를 만든다 유저 , 이메일, 권한
         long todoId = 1L;
         long managerUserId = 2L;
 
         Todo todo = new Todo();
-        ReflectionTestUtils.setField(todo, "user", null);
+        ReflectionTestUtils.setField(todo, "user", null); // private 필드를 강제 조작할 때 사용하는 유틸리티
+        // 필드 하나를 강제로 null로 설정함 그니까 투두를 만든 유저가 없는 상태로 만들었음
 
         ManagerSaveRequest managerSaveRequest = new ManagerSaveRequest(managerUserId);
-
+        // 매니저로 등록할 유저 정보 요청을 객체로 만들고
         given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
+        // 아까 만든 1L 호출하면 우리가 null로 만든 그 null이 반환될 것
 
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () ->

@@ -15,9 +15,9 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class WeatherClient {
-
-    private final RestTemplate restTemplate;
-
+//외부 날씨 API 호출해서 오늘의 날씨를 가져오는 클라이언트
+    private final RestTemplate restTemplate; // HTTP 요청을 보내기 위한 스프링의 기본 HTTP 클라이언트
+    // 생성자에게 저걸 보내서 초기화 하고
     public WeatherClient(RestTemplateBuilder builder) {
         this.restTemplate = builder.build();
     }
@@ -26,14 +26,19 @@ public class WeatherClient {
         ResponseEntity<WeatherDto[]> responseEntity =
                 restTemplate.getForEntity(buildWeatherApiUri(), WeatherDto[].class);
 
-        WeatherDto[] weatherArray = responseEntity.getBody();
+        /**
+         * 이 부분 수정
+         * 연속된 if로 바꿈
+         */
         if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
             throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
-        } else {
-            if (weatherArray == null || weatherArray.length == 0) {
-                throw new ServerException("날씨 데이터가 없습니다.");
-            }
         }
+
+        WeatherDto[] weatherArray = responseEntity.getBody();
+        if (weatherArray == null || weatherArray.length == 0) {
+            throw new ServerException("날씨 데이터가 없습니다.");
+        }
+
 
         String today = getCurrentDate();
 

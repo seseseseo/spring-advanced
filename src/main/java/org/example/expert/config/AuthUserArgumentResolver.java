@@ -41,6 +41,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         String email = (String) request.getAttribute("email");
         UserRole userRole = UserRole.of((String) request.getAttribute("userRole"));
 
+        // AuthUser 객체로 변환해 컨트롤러 메서드로 넘겨줌.
         return new AuthUser(userId, email, userRole);
     }
 }

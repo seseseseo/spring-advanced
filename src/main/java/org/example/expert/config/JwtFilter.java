@@ -31,12 +31,13 @@ public class JwtFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String url = httpRequest.getRequestURI();
-
+        // /auth 경로는 토큰 없이 통과시킴.
         if (url.startsWith("/auth")) {
             chain.doFilter(request, response);
             return;
         }
 
+        // 그 외 경로는 Authorization 헤더에서 토큰 추출 및 검증.
         String bearerJwt = httpRequest.getHeader("Authorization");
 
         if (bearerJwt == null) {

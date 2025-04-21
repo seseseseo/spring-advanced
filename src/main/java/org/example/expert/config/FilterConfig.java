@@ -11,6 +11,7 @@ public class FilterConfig {
 
     private final JwtUtil jwtUtil;
 
+    // JwtFilter를 스프링 필터로 등록
     @Bean
     public FilterRegistrationBean<JwtFilter> jwtFilter() {
         FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
